@@ -9,6 +9,22 @@
     </select>
   </div>
 
+  <!-- Spieler-Auswahl -->
+<div class="form-group">
+  <label for="player-select">Zielspieler auswählen:</label>
+  <div id="player-select" class="player-select form-control">
+    {{#each users}}
+    <div class="form-check">
+      <input class="form-check-input player-option" type="checkbox" id="player-{{@index}}" name="player-select" value="{{this.name}}">
+      <label class="form-check-label" for="player-{{@index}}">
+        {{this.name}}
+      </label>
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+
   <!-- Drop-Bereich für Sounds -->
   <div class="soundpad-drop-area">
     Ziehen Sie Sounds aus einer Wiedergabeliste hierher.

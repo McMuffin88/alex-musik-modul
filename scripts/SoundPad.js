@@ -51,7 +51,17 @@ class SoundPad extends FormApplication {
     super.activateListeners(html);
 
     // Spieler-Auswahl Dropdown
-    const playerSelect = html.find(".player-select");
+    const playerSelect = html.find(".player-select .player-option");
+
+    console.log("Gefundene Checkbox-Elemente:", playerSelect);
+
+    playerSelect.each(function () {
+      console.log("Checkbox Wert:", this.value, "Status:", this.checked);
+    });
+
+
+
+
 
     // Debugging: Verfügbare Spieler anzeigen
     logMessage("Verfügbare Spieler:", game.users.contents.map((u) => u.name));
@@ -78,6 +88,11 @@ class SoundPad extends FormApplication {
     // Play-Button
     html.find(".play-button").click(() => {
       // Klick auf den Play-Button spielt den aktuell ausgewählten Sound für den ausgewählten Spieler ab.
+      playerSelect.each(function () {
+        console.log("Checkbox Wert:", this.value, "Status:", this.checked);
+      });
+      console.log("Aktuell ausgewählte Spieler:", playerSelect.val());
+
       if (!this.selectedSoundId || !this.sounds[this.selectedSoundId]) {
         console.error("Bitte zuerst einen Sound auswählen.");
         return;
