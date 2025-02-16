@@ -53,14 +53,16 @@ class SoundPad extends FormApplication {
     // Spieler-Auswahl Dropdown
     const playerSelect = html.find(".player-select .player-option");
 
-    console.log("Gefundene Checkbox-Elemente:", playerSelect);
-
-    playerSelect.each(function () {
-      console.log("Checkbox Wert:", this.value, "Status:", this.checked);
-    });
-
-
-
+    // Funktion innerhalb von activateListeners definieren
+    function getSelectedPlayers() {
+      let selectedPlayers = [];
+      playerSelect.each(function () {
+        if (this.checked) {
+          selectedPlayers.push(this.value);
+        }
+      });
+      return selectedPlayers;
+    }
 
 
     // Debugging: Verfügbare Spieler anzeigen
@@ -87,11 +89,9 @@ class SoundPad extends FormApplication {
 
     // Play-Button
     html.find(".play-button").click(() => {
-      // Klick auf den Play-Button spielt den aktuell ausgewählten Sound für den ausgewählten Spieler ab.
-      playerSelect.each(function () {
-        console.log("Checkbox Wert:", this.value, "Status:", this.checked);
-      });
-      console.log("Aktuell ausgewählte Spieler:", playerSelect.val());
+      // Test: Gibt die ausgewählten Spieler in der Konsole aus
+      console.log("Gefundene Checkbox-Elemente:", playerSelect);
+      console.log("Ausgewählte Spieler:", getSelectedPlayers());
 
       if (!this.selectedSoundId || !this.sounds[this.selectedSoundId]) {
         console.error("Bitte zuerst einen Sound auswählen.");
@@ -101,14 +101,24 @@ class SoundPad extends FormApplication {
       const soundData = this.sounds[this.selectedSoundId];
       logMessage("Sound wird abgespielt:", soundData);
 
-      const playerName = playerSelect.val();
-      if (!playerName) {
-        console.warn("Bitte einen Spieler auswählen.");
+      // Holt die Liste der ausgewählten Spieler
+      const selectedPlayers = getSelectedPlayers();
+
+      if (selectedPlayers.length === 0) {
+        console.warn("Bitte mindestens einen Spieler auswählen.");
         return;
       }
 
-      playSoundForPlayer(playerName, soundData.playlist, soundData.name);
+      // Für jeden ausgewählten Spieler den Sound abspielen
+      selectedPlayers.forEach(playerName => {
+        playSoundForPlayer(playerName, soundData.playlist, soundData.name);
+        logMessage(`Sound für Spieler ${playerName} gestartet.`);
+      });
     });
+
+
+
+
 
     // Stop-Button
     html.find(".stop-button").click(() => {
