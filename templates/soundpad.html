@@ -1,15 +1,13 @@
 <form class="chris-sound-soundpad">
-<!-- Checkbox-Liste für Charakterauswahl -->
-<!-- Änderung - 2025-02-16 12:35:00 UTC: Checkboxen für Charakterauswahl -->
-<div id="character-selection">
-  {{#each users}}
-    <label>
-      <input type="checkbox" class="character-checkbox" value="{{this.id}}">
-      {{this.name}}
-    </label>
-  {{/each}}
-</div>
-
+  <!-- Spieler-Auswahl -->
+  <div class="form-group">
+    <label for="player-select">Zielspieler auswählen:</label>
+    <select id="player-select" class="player-select form-control">
+      {{#each users}}
+      <option value="{{this.name}}">{{this.name}}</option>
+      {{/each}}
+    </select>
+  </div>
 
   <!-- Drop-Bereich für Sounds -->
   <div class="soundpad-drop-area">

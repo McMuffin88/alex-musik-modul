@@ -1,16 +1,27 @@
 {
-  "id": "alex-musik-modul",
-  "title": "Alex Musik Modul",
-  "description": "Ein Modul zur Steuerung von Musik und Sounds in Foundry VTT.",
-  "author": "Alex",
-  "version": "1.0.1",
+  "id": "chris-sound-module",
+  "title": "Chris Sound Module",
+  "description": "Ein Modul zum Senden und Empfangen von benutzerdefinierten Sound-Nachrichten.",
+  "version": "1.1.0",
   "compatibility": {
-    "minimum": "10",
-    "verified": "11"
+    "minimum": "12",
+    "verified": "12"
   },
-  "esmodules": ["scripts/SoundPad.js"],
-  "styles": ["css/soundpad.css"],
-  "url": "https://github.com/McMuffin88/alex-musik-module",
-  "manifest": "https://raw.githubusercontent.com/McMuffin88/alex-musik-module/main/module.json",
-  "download": "https://github.com/McMuffin88/alex-musik-module/archive/refs/tags/v1.0.1.zip"
+  "esmodules": [
+    "scripts/socket-handler.js",
+	"scripts/SoundPad.js"
+  ],
+    "styles": [
+    "css/soundpad.css"
+  ],
+  "authors": [
+    {
+      "name": "Chrisrous",
+      "flags": {}
+    }
+  ],
+  "socket": true,
+  "url": "https://github.com/Chrisrous/Chris-Sound-Module",
+  "manifest": "https://raw.githubusercontent.com/Chrisrous/Chris-Sound-Module/main/module.json",
+  "download": "https://github.com/Chrisrous/Chris-Sound-Module/releases/download/v1.1.0/chris-sound-module.zip"
 }

@@ -3,21 +3,21 @@ export let enableLogging = false; // Standardmäßig deaktiviert
 
 // Funktion zur Aktualisierung der Logging-Einstellungen
 Hooks.once("init", () => {
-  game.settings.register("alex-musik-modul", "enableLogging", {
+  game.settings.register("chris-sound-module", "enableLogging", {
     name: "Konsolen-Logs aktivieren",
-    hint: "Aktiviert oder deaktiviert Konsolen-Logs für das Alex Musik Modul.",
-    scope: "client",
+    hint: "Aktiviert oder deaktiviert Konsolen-Logs für das SoundPad.",
+    scope: "client", // Nur für den aktuellen Client
     config: true,
-    default: false,
+    default: false, // Standardmäßig deaktiviert
     type: Boolean,
     onChange: value => {
-      enableLogging = value;
+      enableLogging = value; // Aktualisiert die Variable
     }
   });
 
-  enableLogging = game.settings.get("alex-musik-modul", "enableLogging");
+  // Initialer Wert aus den Einstellungen laden
+  enableLogging = game.settings.get("chris-sound-module", "enableLogging");
 });
-
 
 // Hilfsfunktion für konsolenbasiertes Logging
 function logMessage(message, ...optionalParams) {
@@ -30,98 +30,54 @@ class SoundPad extends FormApplication {
   constructor(options = {}) {
     super(options);
     this.sounds = []; // Zentrale Datenstruktur für Sounds
-    this.selectedCharacters = new Set(); // Set für ausgewählte Charaktere
     this.selectedSoundId = null; // ID des aktuell ausgewählten Sounds
     this.selectedSoundName = null; // Name des aktuell ausgewählten Sounds
-  }
-
-  // Sicherstellen, dass `sounds` nicht verloren geht
-  async getData() {
-    const data = await super.getData();
-
-    // Stelle sicher, dass die Sounds-Liste erhalten bleibt
-    if (!this.sounds) {
-      this.sounds = [];
-    }
-    data.sounds = this.sounds;
-
-    data.users = game.users.contents.map(user => ({
-      id: user.id,
-      name: user.name
-    }));
-
-    console.log("Aktuelle Daten in getData():", data); // Debugging
-
-    return data;
   }
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "soundpad",
       title: "SoundPad",
-      template: "modules/alex-musik-modul/templates/soundpad.html",
+      template: "modules/chris-sound-module/templates/soundpad.html",
       width: 500,
       height: 400,
       resizable: true,
-      dragDrop: [{ dragSelector: ".soundpad-drop-area", dropSelector: null }] // Drag-and-Drop aktivieren
+      dragDrop: [{ dragSelector: ".soundpad-drop-area", dropSelector: null }], // Drag-and-Drop aktivieren
     });
   }
 
   activateListeners(html) {
+    // Aktiviert die Listener der Basisklasse und fügt spezifische Listener für das SoundPad hinzu.
     super.activateListeners(html);
-    console.log("Sounds vor Drag-and-Drop:", this.sounds);
 
-    // Stelle sicher, dass das Element existiert
-    const characterSelection = html.find("#character-selection");
+    // Spieler-Auswahl Dropdown
+    const playerSelect = html.find(".player-select");
 
-    if (characterSelection.length === 0) {
-      console.error("Fehler: #character-selection existiert nicht.");
-      return;
-    }
-
-    console.log("Character Selection gefunden, fülle Checkboxen...");
-    characterSelection.empty(); // Lösche alte Einträge, falls vorhanden
-
-    game.users.contents.forEach(user => {
-      const label = $(`<label><input type="checkbox" class="character-checkbox" value="${user.name}"> ${user.name}</label>`);
-      characterSelection.append(label);
-    });
-    
-
-    console.log("Spieler-Checkboxen wurden eingefügt:", characterSelection.html());
-
-    // Checkbox-Eventlistener für Charakterauswahl
-    const checkboxes = html.find(".character-checkbox");
-
-    checkboxes.each((_, checkbox) => {
-      $(checkbox).on("change", (event) => {
-        if (event.target.checked) {
-          this.selectedCharacters.add(event.target.value);
-        } else {
-          this.selectedCharacters.delete(event.target.value);
-        }
-        console.log("Ausgewählte Charaktere:", Array.from(this.selectedCharacters));
-      });
-    });
-
+    // Debugging: Verfügbare Spieler anzeigen
     logMessage("Verfügbare Spieler:", game.users.contents.map((u) => u.name));
 
     // Sound auswählen
     html.find(".sound-button").click((event) => {
+      // Dieser Block verarbeitet die Auswahl eines Sounds durch den Nutzer.
+      // Es wird die ID und der Name des ausgewählten Sounds gespeichert und die Anzeige aktualisiert.
       const button = event.currentTarget;
       this.selectedSoundId = button.dataset.soundId;
       this.selectedSoundName = button.dataset.soundName;
 
       logMessage(`Sound ${this.selectedSoundName} ausgewählt (ID: ${this.selectedSoundId})`);
 
+      // Entferne "active"-Klasse von allen Sound-Buttons
       html.find(".sound-button").removeClass("active");
+      // Füge "active"-Klasse nur beim aktuellen Button hinzu
       $(button).addClass("active");
 
+      // Aktualisiere die Anzeige für den aktuell ausgewählten Sound
       html.find(".selected-sound-display").text(`Aktueller Sound: ${this.selectedSoundName}`);
     });
 
-    // Play-Button für mehrere Charaktere
+    // Play-Button
     html.find(".play-button").click(() => {
+      // Klick auf den Play-Button spielt den aktuell ausgewählten Sound für den ausgewählten Spieler ab.
       if (!this.selectedSoundId || !this.sounds[this.selectedSoundId]) {
         console.error("Bitte zuerst einen Sound auswählen.");
         return;
@@ -130,64 +86,81 @@ class SoundPad extends FormApplication {
       const soundData = this.sounds[this.selectedSoundId];
       logMessage("Sound wird abgespielt:", soundData);
 
-      const selectedPlayers = Array.from(this.selectedCharacters);
-      if (selectedPlayers.length === 0) {
-        console.warn("Bitte mindestens einen Spieler auswählen.");
+      const playerName = playerSelect.val();
+      if (!playerName) {
+        console.warn("Bitte einen Spieler auswählen.");
         return;
       }
 
-      selectedPlayers.forEach(playerName => {
-        playSoundForPlayer(playerName, soundData.playlist, soundData.name);
-      });
+      playSoundForPlayer(playerName, soundData.playlist, soundData.name);
     });
 
-    // Stop-Button für mehrere Charaktere
+    // Stop-Button
     html.find(".stop-button").click(() => {
-      const selectedPlayers = Array.from(this.selectedCharacters);
-      if (selectedPlayers.length === 0) {
-        console.warn("Bitte mindestens einen Spieler auswählen.");
+      // Dieser Block sendet den Stop-Befehl an den aktuell ausgewählten Spieler, um die Wiedergabe des Sounds zu beenden.
+      const playerName = playerSelect.val();
+
+      if (!playerName) {
+        console.warn("Bitte einen Spieler auswählen.");
         return;
       }
 
-      selectedPlayers.forEach(playerName => {
-        logMessage(`Sende Stop-Befehl an Spieler '${playerName}'`);
-        controlSoundForPlayer(playerName, 'stopSound');
-      });
+      logMessage(`Sende Stop-Befehl an Spieler '${playerName}'`);
+      controlSoundForPlayer(playerName, 'stopSound');
     });
 
-    // Lautstärkeregler für mehrere Charaktere
+    // Lautstärkeregler
     html.find("#volume-slider").on("input", (event) => {
+      // Dieser Block verarbeitet den Lautstärkeregler und passt die Lautstärke für den ausgewählten Spieler entsprechend an.
       const volume = parseFloat(event.target.value);
-      const selectedPlayers = Array.from(this.selectedCharacters);
-      if (selectedPlayers.length === 0) {
-        console.warn("Bitte mindestens einen Spieler auswählen.");
+      const playerName = playerSelect.val();
+
+      if (!playerName) {
+        console.warn("Bitte einen Spieler auswählen.");
         return;
       }
 
-      selectedPlayers.forEach(playerName => {
-        logMessage(`Ändere Lautstärke auf ${volume} für Spieler '${playerName}'`);
-        changeVolumeForPlayer(playerName, volume);
+      logMessage(`Ändere Lautstärke auf ${volume} für Spieler '${playerName}'`);
+      changeVolumeForPlayer(playerName, volume);
+    });
+
+    // Button: Alle Sounds entfernen
+    html.find(".clear-sounds").click(() => {
+      logMessage("Alle Sounds werden entfernt.");
+      this.sounds = []; // Leere die zentrale Datenstruktur
+      this.render(true); // Aktualisiere die Ansicht
+    });
+
+    // Debugging: Überprüfe Buttons nach Initialisierung
+    html.find(".sound-button").each((index, button) => {
+      logMessage("Initialisierter Button:", {
+        soundId: button.dataset.soundId,
+        soundName: button.dataset.soundName,
       });
     });
- 
+  }
 
-      // Button: Alle Sounds entfernen
-      html.find(".clear-sounds").click(() => {
-        logMessage("Alle Sounds werden entfernt.");
-        this.sounds = []; // Leere die zentrale Datenstruktur
-        this.render(true); // Aktualisiere die Ansicht
-      });
+  /**
+   * Bereitet die Daten für die Anzeige in der Benutzeroberfläche des SoundPads vor.
+   * Liefert eine Liste von Sounds und die verfügbaren Benutzer im Spiel.
+   */
+  getData() {
+    const users = game.users.contents.map((user) => ({ name: user.name }));
+    return { sounds: this.sounds, users };
+  }
 
-    }
-
-  // Drag-and-Drop-Funktion
+  /**
+   * Diese Methode verarbeitet das Drag-and-Drop-Event für Sounds.
+   * Es wird überprüft, ob die Daten gültig sind und ein Sound aus einer Playlist hinzugefügt werden kann.
+   * Die hinzugefügten Sounds werden in der zentralen Datenstruktur gespeichert und die Ansicht wird aktualisiert.
+   */
   async _onDrop(event) {
     event.preventDefault();
 
     let data;
     try {
       data = JSON.parse(event.dataTransfer.getData("text/plain"));
-      logMessage("Daten aus Drag-and-Drop-Event:", data);
+      logMessage("Daten aus Drag-and-Drop-Event:", data); // Debugging-Ausgabe
     } catch (err) {
       console.error("Fehler beim Verarbeiten der Drag-and-Drop-Daten:", err);
       return;
@@ -213,7 +186,12 @@ class SoundPad extends FormApplication {
       this.sounds.push({
         name: sound.name,
         src: sound.path,
-        playlist: playlist.name
+        playlist: playlist.name, // Playlist-Name hinzufügen
+      });
+
+      logMessage("Aktualisierte Sounds-Liste nach Hinzufügen:", this.sounds); // Debugging hinzugefügt
+      this.sounds.forEach((sound, index) => {
+        logMessage(`Sound #${index}: Name=${sound.name}, Pfad=${sound.src}, Playlist=${sound.playlist}`);
       });
 
       logMessage(`Sound "${sound.name}" hinzugefügt:`, sound);
@@ -225,30 +203,20 @@ class SoundPad extends FormApplication {
 }
 
 Hooks.once("ready", () => {
+  if (!game.user.isGM) {
+    console.warn("SoundPad ist nur für GMs verfügbar.");
+    return;
+  }
+
+  game.settings.registerMenu("chris-sound-module", "soundpad", {
+    name: "SoundPad öffnen",
+    label: "SoundPad",
+    icon: "fas fa-music",
+    type: SoundPad,
+    restricted: true, // Nur GMs können das SoundPad öffnen
+  });
+
   window.soundPad = new SoundPad();
 });
 
-// Änderung - 2025-02-16 14:30:00 UTC: Button nur im Wiedergabelisten-Reiter anzeigen
-Hooks.on("renderPlaylistDirectory", (app, html, data) => {
-  // Falls der Button schon existiert, nicht erneut hinzufügen (verhindert doppelte Buttons)
-  if (html.find(".alex-musik-modul-button").length) return;
-
-  const button = $(`
-      <button class="alex-musik-modul-button">
-          <i class="fas fa-music"></i> Alex Musikmodul
-      </button>
-  `);
-
-  // Button oberhalb der Wiedergabelisten hinzufügen
-  html.find(".directory-header").append(button);
-
-  // Klick-Event hinzufügen, um das Musikmodul zu öffnen
-  button.click(() => {
-      new SoundPad().render(true);
-  });
-
-  console.log("Alex Musikmodul Button zur Wiedergabeliste hinzugefügt.");
-});
-
 window.SoundPad = SoundPad;
-
