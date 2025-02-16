@@ -1,0 +1,47 @@
+<form class="chris-sound-soundpad">
+<!-- Checkbox-Liste für Charakterauswahl -->
+<!-- Änderung - 2025-02-16 12:35:00 UTC: Checkboxen für Charakterauswahl -->
+<div id="character-selection">
+  {{#each users}}
+    <label>
+      <input type="checkbox" class="character-checkbox" value="{{this.id}}">
+      {{this.name}}
+    </label>
+  {{/each}}
+</div>
+
+
+  <!-- Drop-Bereich für Sounds -->
+  <div class="soundpad-drop-area">
+    Ziehen Sie Sounds aus einer Wiedergabeliste hierher.
+  </div>
+
+  <!-- Liste der Sounds -->
+  <div class="sound-list">
+    {{#each sounds}}
+    <button type="button" class="sound-button" data-sound-id="{{@index}}" data-sound-name="{{this.name}}" data-src="{{this.src}}">
+      {{this.name}}
+    </button>
+    {{/each}}
+  </div>
+
+  <!-- Anzeige des aktuell ausgewählten Sounds -->
+  <div class="selected-sound-info">
+    <span class="selected-sound-display">Aktueller Sound: {{selectedSoundName}}</span>
+  </div>
+
+  <!-- Medien-Steuerung -->
+  <div class="media-controls">
+    <button type="button" class="play-button" style="position: relative;">🎵 Play</button>
+    <button type="button" class="stop-button" style="position: relative;">🛑 Stop</button>
+  </div>
+
+  <!-- Lautstärkeregler -->
+  <div class="volume-control">
+    <label for="volume-slider">Lautstärke:</label>
+    <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.8" />
+  </div>
+
+  <!-- Button: Alle Sounds entfernen -->
+  <button type="button" class="clear-sounds">Alle Sounds entfernen</button>
+</form>

@@ -1,0 +1,16 @@
+{
+  "id": "alex-musik-modul",
+  "title": "Alex Musik Modul",
+  "description": "Ein Modul zur Steuerung von Musik und Sounds in Foundry VTT.",
+  "author": "Alex",
+  "version": "1.0.1",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "11"
+  },
+  "esmodules": ["scripts/SoundPad.js"],
+  "styles": ["css/soundpad.css"],
+  "url": "https://github.com/McMuffin88/alex-musik-module",
+  "manifest": "https://raw.githubusercontent.com/McMuffin88/alex-musik-module/main/module.json",
+  "download": "https://github.com/McMuffin88/alex-musik-module/archive/refs/tags/v1.0.1.zip"
+}
