@@ -40,18 +40,28 @@ class SoundPad extends FormApplication {
       title: "Niclex Musik Modul",
       template: "modules/chris-sound-module/templates/soundpad.html",
       width: 500,
-      height: 400,
       resizable: true,
       dragDrop: [{ dragSelector: ".soundpad-drop-area", dropSelector: null }], // Drag-and-Drop aktivieren
     });
   }
 
+
+    // Diese Methode wird beim Rendern des Fensters aufgerufen, um die Höhe dynamisch anzupassen
+    _onRender(...args) {
+      super._onRender(...args);
+  
+      // Dynamisch die Höhe basierend auf dem Inhalt setzen
+      const contentHeight = this.element[0].scrollHeight;
+      this.setHeight(contentHeight); // Setzt die Höhe des Fensters auf die Höhe des Inhalts
+    }
+
+
   activateListeners(html) {
     // Aktiviert die Listener der Basisklasse und fügt spezifische Listener für das Niclex Modules hinzu.
     super.activateListeners(html);
 
-    // Spieler-Auswahl
-     const playerSelect = html.find(".player-select .player-option");
+    // Spieler-Auswahl Dropdown
+    const playerSelect = html.find(".player-select .player-option");
 
     // Funktion innerhalb von activateListeners definieren
     function getSelectedPlayers() {
