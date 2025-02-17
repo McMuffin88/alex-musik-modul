@@ -149,3 +149,26 @@
   background-image: linear-gradient(to right, #6b4b1a, #e6b89c, #6b4b1a);
   margin: 15px 0;
 }
+
+/* Container für die Checkboxen: Flexbox ausrichten */
+#player-select {
+  display: flex;
+  flex-wrap: wrap;                 /* Umbrüche ermöglichen, wenn der Platz nicht ausreicht */
+  justify-content: flex-start;     /* Checkboxen links ausrichten */
+  gap: 15px;                       /* Abstand zwischen den Checkboxen */
+  padding: 10px 0;                 /* Padding hinzufügen, um Platz zu schaffen */
+}
+
+/* Jede einzelne Checkbox und ihr Label */
+#player-select .form-check {
+  flex: 0 1 calc(50% - 10px);      /* Zwei Checkboxen nebeneinander mit etwas Abstand */
+  text-align: center;              /* Zentriert den Text unterhalb der Checkbox */
+  box-sizing: border-box;         /* Verhindert, dass das Padding die Breite beeinflusst */
+}
+
+/* Optional: Den Text unter der Checkbox anpassen */
+#player-select .form-check label {
+  display: block;                 /* Label unter der Checkbox anzeigen */
+  margin-top: 5px;                 /* Abstand zwischen der Checkbox und dem Text */
+}
+
