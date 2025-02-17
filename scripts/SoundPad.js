@@ -50,8 +50,8 @@ class SoundPad extends FormApplication {
     // Aktiviert die Listener der Basisklasse und fügt spezifische Listener für das Niclex Modules hinzu.
     super.activateListeners(html);
 
-    // Spieler-Auswahl Dropdown
-    const playerSelect = html.find(".player-select .player-option");
+    // Spieler-Auswahl
+     const playerSelect = html.find(".player-select .player-option");
 
     // Funktion innerhalb von activateListeners definieren
     function getSelectedPlayers() {
