@@ -1,11 +1,11 @@
-// Erweiterung des SoundPad zur Unterstützung von Play, Stop und Lautstärke
+// Erweiterung des Niclex Modules zur Unterstützung von Play, Stop und Lautstärke
 export let enableLogging = false; // Standardmäßig deaktiviert
 
 // Funktion zur Aktualisierung der Logging-Einstellungen
 Hooks.once("init", () => {
   game.settings.register("chris-sound-module", "enableLogging", {
     name: "Konsolen-Logs aktivieren",
-    hint: "Aktiviert oder deaktiviert Konsolen-Logs für das SoundPad.",
+    hint: "Aktiviert oder deaktiviert Konsolen-Logs für das Niclex Modul.",
     scope: "client", // Nur für den aktuellen Client
     config: true,
     default: false, // Standardmäßig deaktiviert
@@ -37,7 +37,7 @@ class SoundPad extends FormApplication {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "soundpad",
-      title: "SoundPad",
+      title: "Niclex Musik Modul",
       template: "modules/chris-sound-module/templates/soundpad.html",
       width: 500,
       height: 400,
@@ -47,7 +47,7 @@ class SoundPad extends FormApplication {
   }
 
   activateListeners(html) {
-    // Aktiviert die Listener der Basisklasse und fügt spezifische Listener für das SoundPad hinzu.
+    // Aktiviert die Listener der Basisklasse und fügt spezifische Listener für das Niclex Modules hinzu.
     super.activateListeners(html);
 
     // Spieler-Auswahl Dropdown
@@ -185,9 +185,10 @@ html.find("#master-volume-slider").on("input", (event) => {
       });
     });
   }
+  
 
   /**
-   * Bereitet die Daten für die Anzeige in der Benutzeroberfläche des SoundPads vor.
+   * Bereitet die Daten für die Anzeige in der Benutzeroberfläche des Niclex Modules vor.
    * Liefert eine Liste von Sounds und die verfügbaren Benutzer im Spiel.
    */
   getData() {
@@ -250,19 +251,44 @@ html.find("#master-volume-slider").on("input", (event) => {
 
 Hooks.once("ready", () => {
   if (!game.user.isGM) {
-    console.warn("SoundPad ist nur für GMs verfügbar.");
+    console.warn("Niclex Modul ist nur für GMs verfügbar.");
     return;
   }
 
-  game.settings.registerMenu("chris-sound-module", "soundpad", {
-    name: "SoundPad öffnen",
-    label: "SoundPad",
+  game.settings.registerMenu("chris-sound-module", "Niclex Modul", {
+    name: "Nixlex Musik Modul öffnen",
+    label: "Nixlex Musik Modul",
     icon: "fas fa-music",
     type: SoundPad,
-    restricted: true, // Nur GMs können das SoundPad öffnen
+    restricted: true, // Nur GMs können das Niclex Modul öffnen
   });
 
   window.soundPad = new SoundPad();
 });
+
+Hooks.on("renderPlaylistDirectory", (app, html, data) => {
+  // Erst prüfen, ob der User ein GM ist (optional)
+  if (!game.user.isGM) return;
+
+      // Prüfen, ob der Button bereits existiert
+      if (html.find(".soundpad-button").length > 0) return;
+
+  // Neuen Button für das Niclex Modul erstellen
+  const soundPadButton = $(`
+      <button class="soundpad-button" style="margin: 5px; width: 100%;">
+          🎵 Niclexmodul öffnen
+      </button>
+  `);
+
+  // Event Listener für den Button hinzufügen
+  soundPadButton.click(() => {
+      new SoundPad().render(true);
+  });
+
+  // Button an die Liste der Wiedergabelisten anhängen
+  html.find(".directory-header").append(soundPadButton);
+});
+
+
 
 window.SoundPad = SoundPad;
