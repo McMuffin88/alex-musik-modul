@@ -137,20 +137,38 @@ html.find(".stop-button").click(() => {
   });
 });
 
-    // Lautstärkeregler
-    html.find("#volume-slider").on("input", (event) => {
-      // Dieser Block verarbeitet den Lautstärkeregler und passt die Lautstärke für den ausgewählten Spieler entsprechend an.
-      const volume = parseFloat(event.target.value);
-      const playerName = playerSelect.val();
+// Lautstärkeregler
+html.find("#volume-slider").on("input", (event) => {
+  const volume = parseFloat(event.target.value);
 
-      if (!playerName) {
-        console.warn("Bitte einen Spieler auswählen.");
-        return;
-      }
+  // Holt die Liste der ausgewählten Spieler
+  const selectedPlayers = getSelectedPlayers();
 
-      logMessage(`Ändere Lautstärke auf ${volume} für Spieler '${playerName}'`);
+  if (selectedPlayers.length === 0) {
+      console.warn("Bitte mindestens einen Spieler auswählen.");
+      return;
+  }
+
+  // Für jeden ausgewählten Spieler die Lautstärke anpassen
+  selectedPlayers.forEach(playerName => {
       changeVolumeForPlayer(playerName, volume);
-    });
+      logMessage(`Lautstärke für Spieler ${playerName} auf ${Math.round(volume * 100)}% gesetzt.`);
+  });
+});
+
+// Master-Lautstärkeregler
+html.find("#master-volume-slider").on("input", (event) => {
+  const volume = parseFloat(event.target.value);
+
+  // Holt ALLE Spieler aus der Spieler-Liste
+  const allPlayers = game.users.contents.map(user => user.name);
+
+  // Für jeden Spieler die Lautstärke anpassen
+  allPlayers.forEach(playerName => {
+      changeVolumeForPlayer(playerName, volume);
+      logMessage(`Master-Lautstärke für Spieler ${playerName} auf ${Math.round(volume * 100)}% gesetzt.`);
+  });
+});
 
     // Button: Alle Sounds entfernen
     html.find(".clear-sounds").click(() => {
