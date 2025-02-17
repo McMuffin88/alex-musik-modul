@@ -116,23 +116,26 @@ class SoundPad extends FormApplication {
       });
     });
 
+// Stop-Button
+html.find(".stop-button").click(() => {
+  // Test: Gibt die ausgewählten Spieler in der Konsole aus
+  console.log("Gefundene Checkbox-Elemente:", playerSelect);
+  console.log("Ausgewählte Spieler:", getSelectedPlayers());
 
+  // Holt die Liste der ausgewählten Spieler
+  const selectedPlayers = getSelectedPlayers();
 
+  if (selectedPlayers.length === 0) {
+      console.warn("Bitte mindestens einen Spieler auswählen.");
+      return;
+  }
 
-
-    // Stop-Button
-    html.find(".stop-button").click(() => {
-      // Dieser Block sendet den Stop-Befehl an den aktuell ausgewählten Spieler, um die Wiedergabe des Sounds zu beenden.
-      const playerName = playerSelect.val();
-
-      if (!playerName) {
-        console.warn("Bitte einen Spieler auswählen.");
-        return;
-      }
-
-      logMessage(`Sende Stop-Befehl an Spieler '${playerName}'`);
+  // Für jeden ausgewählten Spieler den Stop-Befehl senden
+  selectedPlayers.forEach(playerName => {
       controlSoundForPlayer(playerName, 'stopSound');
-    });
+      logMessage(`Stop-Befehl für Spieler ${playerName} gesendet.`);
+  });
+});
 
     // Lautstärkeregler
     html.find("#volume-slider").on("input", (event) => {
