@@ -4,6 +4,19 @@
     Ziehen Sie Sounds aus einer Wiedergabeliste hierher.
   </div>
 
+  <!-- Text für die Auswahl -->
+<div class="selection-text">
+  Auswahl treffen:
+</div>
+
+    <!-- Liste der Sounds -->
+    <div class="sound-list">
+      {{#each sounds}}
+      <button type="button" class="sound-button" data-sound-id="{{@index}}" data-sound-name="{{this.name}}" data-src="{{this.src}}">
+        {{this.name}}
+      </button>
+      {{/each}}
+    </div>
 
   <!-- Spieler-Auswahl -->
 <div class="form-group">
@@ -21,19 +34,11 @@
 </div>
 
 
-  <!-- Liste der Sounds -->
-  <div class="sound-list">
-    {{#each sounds}}
-    <button type="button" class="sound-button" data-sound-id="{{@index}}" data-sound-name="{{this.name}}" data-src="{{this.src}}">
-      {{this.name}}
-    </button>
-    {{/each}}
-  </div>
+<!-- Anzeige des aktuell ausgewählten Sounds -->
+<div class="selected-sound-info">
+  <span class="selected-sound-display">Ausgewählter Sound: keiner</span>
+</div>
 
-  <!-- Anzeige des aktuell ausgewählten Sounds -->
-  <div class="selected-sound-info">
-    <span class="selected-sound-display">Aktueller Sound: {{selectedSoundName}}</span>
-  </div>
 
   <!-- Medien-Steuerung -->
   <div class="media-controls">

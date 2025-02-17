@@ -3,6 +3,7 @@
   padding: 20px;
   font-family: 'Uncial Antiqua', serif;
   max-width: 400px;
+  min-height: 800px;
   margin: auto;
   color: #3c2f1a;
 }
@@ -172,3 +173,36 @@
   margin-top: 5px;                 /* Abstand zwischen der Checkbox und dem Text */
 }
 
+/* Styling für den Bereich "Ausgewählter Sound" */
+.selected-sound-info {
+  text-align: center;           /* Text zentrieren */
+  padding: 10px;                /* Etwas Abstand um den Text */
+  margin: 15px 0;               /* Abstand oben und unten */
+  background-color: #f2e0c9;    /* Helles Hintergrundfarbe für den Rahmen */
+  border: 2px solid #6b4b1a;    /* Dunkler Rand um das Label */
+  border-radius: 10px;          /* Abgerundete Ecken */
+  font-size: 18px;              /* Etwas größere Schrift für Sichtbarkeit */
+  font-weight: bold;            /* Fettdruck für den Text */
+  color: #6b4b1a;               /* Farbe des Textes */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Schatten für besseren Kontrast */
+}
+
+/* Stil für den Text "Ausgewählter Sound" */
+.selected-sound-display {
+  color: #6b4b1a;               /* Dunkle Textfarbe */
+  font-size: 20px;              /* Größere Schrift für mehr Präsenz */
+  font-weight: bold;            /* Fettdruck für besseren Eindruck */
+}
+
+.selected-sound-display {
+  color: #6b4b1a;  /* Standardtextfarbe */
+  font-size: 15px;
+  font-weight: bold;
+}
+.selection-text {
+  text-align: center;            /* Zentriert den Text */
+  font-size: 15px;               /* Etwas größere Schrift */
+  font-weight: bold;             /* Fettgedruckt */
+  margin: 15px 0;                /* Abstand oben und unten */
+  color: #6b4b1a;                /* Dunkle Farbe für den Text */
+}

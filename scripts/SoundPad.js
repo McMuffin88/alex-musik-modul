@@ -46,14 +46,20 @@ class SoundPad extends FormApplication {
   }
 
 
-    // Diese Methode wird beim Rendern des Fensters aufgerufen, um die Höhe dynamisch anzupassen
-    _onRender(...args) {
-      super._onRender(...args);
-  
-      // Dynamisch die Höhe basierend auf dem Inhalt setzen
-      const contentHeight = this.element[0].scrollHeight;
-      this.setHeight(contentHeight); // Setzt die Höhe des Fensters auf die Höhe des Inhalts
-    }
+// Diese Methode wird beim Rendern des Fensters aufgerufen, um die Höhe dynamisch anzupassen
+_onRender(...args) {
+  super._onRender(...args);
+
+  // Dynamisch die Höhe basierend auf dem Inhalt setzen
+  const contentHeight = this.element[0].scrollHeight;
+
+  // Mindesthöhe setzen (z.B. 400px), falls der Inhalt weniger Platz benötigt
+  const minHeight = 800; // Definiere eine Mindesthöhe
+  const height = Math.max(contentHeight, minHeight); // Höhe nehmen, die größer ist als die Mindesthöhe
+
+  this.setHeight(height); // Setzt die Höhe des Fensters auf die berechnete Höhe
+}
+
 
 
   activateListeners(html) {
@@ -93,8 +99,17 @@ class SoundPad extends FormApplication {
       // Füge "active"-Klasse nur beim aktuellen Button hinzu
       $(button).addClass("active");
 
-      // Aktualisiere die Anzeige für den aktuell ausgewählten Sound
-      html.find(".selected-sound-display").text(`Aktueller Sound: ${this.selectedSoundName}`);
+// Wenn der Soundpad geöffnet wird oder nach jeder Auswahl eines Sounds
+if (this.selectedSoundName && this.selectedSoundName !== "") {
+  // Wenn ein Sound ausgewählt wurde
+  html.find(".selected-sound-display").text(`Ausgewählter Sound: ${this.selectedSoundName}`);
+  html.find(".selected-sound-display").css("color", "#6b4b1a");  // Setzt den Text auf den normalen Farbton
+} else {
+  // Wenn kein Sound ausgewählt wurde, Warnmeldung anzeigen
+  html.find(".selected-sound-display").text("⚠️ Kein Sound ausgewählt. Bitte wählen Sie einen Sound aus.");
+  html.find(".selected-sound-display").css("color", "#a42b1d");  // Warnfarbe für Text
+}
+
     });
 
     // Play-Button
